@@ -31,9 +31,9 @@ public enum FinancialProfile: String, CaseIterable, Codable, Hashable, Sendable 
     }
     ///Classifies the profile from a monthly RAS.
     public static func classify(with ras: Decimal) -> FinancialProfile {
-        if ras < survivor.rasUpperBound ?? 150 { return .survivor }
-        if ras < equilibrist.rasUpperBound ?? 400 { return .equilibrist }
-        if ras < builder.rasUpperBound ?? 800 { return .builder }
+        if ras <= survivor.rasUpperBound ?? 150 { return .survivor }
+        if ras <= equilibrist.rasUpperBound ?? 400 { return .equilibrist }
+        if ras <= builder.rasUpperBound ?? 800 { return .builder }
         return .strategist
     }
 }
