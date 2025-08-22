@@ -39,14 +39,7 @@ class FinancialProfileManager {
         let restAfterSaving = rest - availableForSaving
         microSaving = calculator.minusPercentage(of: restAfterSaving, percent: 10)
         ras = restAfterSaving - microSaving
-        
-        
-        
-        
-        
-        
-        
-        
+        return FinancialProfile.classify(with: ras)
     }
     
     
