@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:FinanceCore}",
+            "name": "Debug financecore-cli",
+            "program": "${workspaceFolder:FinanceCore}/.build/debug/financecore-cli",
+            "preLaunchTask": "swift: Build Debug financecore-cli"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:FinanceCore}",
+            "name": "Release financecore-cli",
+            "program": "${workspaceFolder:FinanceCore}/.build/release/financecore-cli",
+            "preLaunchTask": "swift: Build Release financecore-cli"
+        }
+    ]
+}

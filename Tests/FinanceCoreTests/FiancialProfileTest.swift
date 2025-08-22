@@ -10,7 +10,6 @@ import Foundation
 import FinanceCore
 
 struct Test {
-
     @Test func pfRasMax() async throws {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.
         let pf = FinancialProfile.builder
