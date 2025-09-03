@@ -1,35 +1,45 @@
-//
-//  Test.swift
-//  FinanceCore
-//
-//  Created by Sébastien Daguin on 22/08/2025.
-//
-
 import Testing
 import Foundation
 import FinanceCore
 
-struct Test {
-    @Test func pfRasMax() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-        let pf = FinancialProfile.builder
-        #expect(pf.rasUpperBound == 800)
+@Suite("Tests unitaires du profil financier")
+struct FinancialProfileTests {
+    @Test("rasUpperBound: valeurs attendues pour chaque profil")
+    func rasUpperBoundValues() async throws {
+        #expect(FinancialProfile.survivor.rasUpperBound == 150)
+        #expect(FinancialProfile.equilibrist.rasUpperBound == 400)
+        #expect(FinancialProfile.builder.rasUpperBound == 800)
+        #expect(FinancialProfile.strategist.rasUpperBound == nil)
+        #expect(FinancialProfile.none.rasUpperBound == nil)
     }
-    @Test("Étant donner un profil survivant ")
-    func pSurvivoirfRasMax() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-        let pf = FinancialProfile.survivor
-        #expect(pf.rasUpperBound == 150)
+    
+    @Test("classify: RAS à la frontière du survivant")
+    func classifySurvivorBound() async throws {
+        #expect(FinancialProfile.classify(with: 0) == .survivor)
+        #expect(FinancialProfile.classify(with: 150) == .survivor)
     }
-    @Test("Test Étant donner un RAS de 150 doit donner un survivant")
-    func chexkRasSurvivor() async throws {
-        let ras: Decimal = 150
-        #expect(FinancialProfile.survivor == FinancialProfile.classify(with: ras))
+    
+    @Test("classify: RAS juste après la frontière du survivant")
+    func classifyEquilibristMin() async throws {
+        #expect(FinancialProfile.classify(with: 151) == .equilibrist)
+        #expect(FinancialProfile.classify(with: 400) == .equilibrist)
     }
-    @Test("Etant donner un RAS de 250")
-    func chesckRasEquilibrist() async throws {
-        let ras: Decimal = 250
-        #expect(FinancialProfile.classify(with: ras) == FinancialProfile.equilibrist)
+    
+    @Test("classify: RAS juste après la frontière de l'équilibrist")
+    func classifyBuilderMin() async throws {
+        #expect(FinancialProfile.classify(with: 401) == .builder)
+        #expect(FinancialProfile.classify(with: 800) == .builder)
     }
-
+    
+    @Test("classify: RAS au‑dessus du builder, strategist")
+    func classifyStrategist() async throws {
+        #expect(FinancialProfile.classify(with: 801) == .strategist)
+        #expect(FinancialProfile.classify(with: 10000) == .strategist)
+    }
+    
+    @Test("classify: valeurs extrêmes et inattendues")
+    func classifyExtremeValues() async throws {
+        #expect(FinancialProfile.classify(with: -50) == .survivor) // négatif = survivor
+        #expect(FinancialProfile.classify(with: Decimal.greatestFiniteMagnitude) == .strategist)
+    }
 }

@@ -39,11 +39,11 @@ public final class FinancialProfileManager {
 
     /// Calcule le profil à partir d'un montant de dépenses (expenses) fourni.
     @discardableResult
-    public func calculate(with expense: Decimal) -> FinancialProfile {
+    public func calculateWithExpense() -> FinancialProfile {
         guard revenues > 0 else { return .survivor }
 
         // 1) Solde après dépenses fixes
-        availableSavingsCapacity = revenues - expense
+        availableSavingsCapacity = revenues - expenses
         guard availableSavingsCapacity > 0 else {
             ras = 0
             return .survivor
