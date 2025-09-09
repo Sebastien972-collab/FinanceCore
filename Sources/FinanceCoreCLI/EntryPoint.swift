@@ -25,7 +25,9 @@ struct FinanceCoreCLI {
             return
         }
         if args.contains("--version") {
-            print("financecore-cli v0.1.0")
+            if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                print("financecore-cli v\(version)")
+            }
             return
         }
 
@@ -35,13 +37,17 @@ struct FinanceCoreCLI {
         print("Combien gagnez-vous (revenus mensuels en €) ? ", terminator: "")
         guard let rLine = readLine(strippingNewline: true),
               let revenues = Decimal(string: rLine.replacingOccurrences(of: ",", with: ".")) else {
-            print("Entrée invalide pour les revenus."); return
+            print("Entrée invalide pour les revenus.")
+            main()
+            return
         }
 
         print("Quel est le total de vos charges fixes mensuelles (en €) ? ", terminator: "")
         guard let eLine = readLine(strippingNewline: true),
               let expenses = Decimal(string: eLine.replacingOccurrences(of: ",", with: ".")) else {
-            print("Entrée invalide pour les charges."); return
+            print("Entrée invalide pour les charges.")
+            main()
+            return
         }
 
         // --- Calcul RAS & profil ---

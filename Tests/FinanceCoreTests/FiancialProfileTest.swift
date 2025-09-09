@@ -6,11 +6,11 @@ import FinanceCore
 struct FinancialProfileTests {
     @Test("rasUpperBound: valeurs attendues pour chaque profil")
     func rasUpperBoundValues() async throws {
-        #expect(FinancialProfile.survivor.rasUpperBound == 150)
-        #expect(FinancialProfile.equilibrist.rasUpperBound == 400)
-        #expect(FinancialProfile.builder.rasUpperBound == 800)
-        #expect(FinancialProfile.strategist.rasUpperBound == nil)
-        #expect(FinancialProfile.none.rasUpperBound == nil)
+        #expect(FinancialProfile.survivor.ascUpperBound == 150)
+        #expect(FinancialProfile.equilibrist.ascUpperBound == 250)
+        #expect(FinancialProfile.builder.ascUpperBound == 500)
+        #expect(FinancialProfile.strategist.ascUpperBound == nil)
+        #expect(FinancialProfile.none.ascUpperBound == nil)
     }
     
     @Test("classify: RAS à la frontière du survivant")
@@ -22,13 +22,13 @@ struct FinancialProfileTests {
     @Test("classify: RAS juste après la frontière du survivant")
     func classifyEquilibristMin() async throws {
         #expect(FinancialProfile.classify(with: 151) == .equilibrist)
-        #expect(FinancialProfile.classify(with: 400) == .equilibrist)
+        #expect(FinancialProfile.classify(with: 400) == .builder)
     }
     
     @Test("classify: RAS juste après la frontière de l'équilibrist")
     func classifyBuilderMin() async throws {
         #expect(FinancialProfile.classify(with: 401) == .builder)
-        #expect(FinancialProfile.classify(with: 800) == .builder)
+        #expect(FinancialProfile.classify(with: 800) == .strategist)
     }
     
     @Test("classify: RAS au‑dessus du builder, strategist")

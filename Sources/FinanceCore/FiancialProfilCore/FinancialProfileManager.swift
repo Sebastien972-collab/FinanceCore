@@ -48,6 +48,7 @@ public final class FinancialProfileManager {
             ras = 0
             return .survivor
         }
+        let profile = FinancialProfile.classify(with: availableSavingsCapacity)
 
         // 2) Réserve sécurité : garder 3/4
         safetyBase = calculator.threeQuarter(of: availableSavingsCapacity)
@@ -61,7 +62,10 @@ public final class FinancialProfileManager {
 
         // 5) (Option) proposer d’épargner 1/4 du RAS pour un projet
         projectSavingQuarter = calculator.quarter(of: ras)
+        
+        return profile
 
-        return FinancialProfile.classify(with: ras)
     }
+    
+
 }

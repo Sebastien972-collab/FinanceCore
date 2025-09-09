@@ -10,11 +10,11 @@ import Foundation
 public enum ExpenseType: String, Hashable, CaseIterable {
     case fixed = "Dépense fixe"
     case rent = "Loyer"
-     case utilities = "Factures"
-     case groceries = "Courses"
-     case transport = "Transport"
-     case leisure = "Loisirs"
-     case subscriptions = "Abonnements"
-     case other = "Autres"
+    case utilities = "Factures"
+    case groceries = "Courses"
+    case transport = "Transport"
+    case leisure = "Loisirs"
+    case subscriptions = "Abonnements"
+    case other = "Autres"
     
 }
