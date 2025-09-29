@@ -73,4 +73,8 @@ public struct Project {
         guard date != self.finalDate else { return }
         self.finalDate = date
     }
+    
+    public func feasibilityCalculation(_ availableSavingsCapacity: Decimal) -> FeasibilityAnswer {
+        FeasibilityAnswer.positiveAnswer
+    }
 }
