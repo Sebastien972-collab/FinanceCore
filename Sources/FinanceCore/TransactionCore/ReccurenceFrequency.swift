@@ -8,7 +8,7 @@
 import Foundation
 
 public enum RecurrenceFrequency: String, Codable, Sendable {
-    case none = "Aucun"
+    case none = "Aucune"
     case weekly = "Hebdomadaire"
     case monthly = "Mensuel"
     case yearly = "Annuel"
