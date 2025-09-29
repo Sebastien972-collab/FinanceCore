@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Transaction: Identifiable, Hashable {
+public struct Transaction: Identifiable, Hashable, Sendable {
     public private(set) var id: UUID = .init()
     public var label: String?
     public let date: Date
@@ -17,7 +17,15 @@ public struct Transaction: Identifiable, Hashable {
     public private(set) var recurrence: RecurrenceFrequency = .none
     public private(set) var note: String = ""
     public var formattedAmount: String {
-        "\(amount) \(currency.symbol)"
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        
+        let number = NSDecimalNumber(decimal: amount)
+        let formatted = formatter.string(from: number) ?? "\(amount)"
+        
+        return "\(formatted)\(currency.symbol)"
     }
     public var isIncome: Bool { if case .income = category { return true } else { return false } }
     //MARK: - Inits
@@ -59,3 +67,4 @@ public struct Transaction: Identifiable, Hashable {
     }
     
 }
+

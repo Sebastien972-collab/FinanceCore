@@ -13,6 +13,7 @@ public enum TransactionError: Error, LocalizedError, Sendable {
     case dateNotAllowed
     case noteNotAllowed
     case noteExist
+    case insufficientFunds
     case unknown
     
     /// Message par défaut pour LocalizedError
@@ -30,6 +31,8 @@ public enum TransactionError: Error, LocalizedError, Sendable {
             return "Cette note n'est pas valide"
         case .noteExist:
             return "Cette note existe déjà"
+        case .insufficientFunds:
+            return "Fonds insuffisants."
         }
     }
 }

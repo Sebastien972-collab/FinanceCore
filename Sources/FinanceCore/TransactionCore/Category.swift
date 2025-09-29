@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum TransactionCategory: Hashable {
+public enum TransactionCategory: Hashable, Sendable {
     case income(IncomeType)
     case expense(ExpenseType)
     

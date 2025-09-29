@@ -23,13 +23,13 @@ struct TransactionTest {
     @Test("Vérification d'une format de la transaction nombre positif")
     func addIncomeFormated() async throws {
         let transaction = Transaction(date: .now, amount: 12.99, currency: .eur, category: .income(.investment))
-        #expect(transaction.formattedAmount == "12.99 €")
+        #expect(transaction.formattedAmount == "12,99€")
     }
     
     @Test("Vérification d'une format de la transaction nombre négatif")
     func addExpenseFormated() async throws {
         let transaction = Transaction(date: .now, amount: -12.99, currency: .eur, category: .expense(.subscriptions))
-        #expect(transaction.formattedAmount == "-12.99 €")
+        #expect(transaction.formattedAmount == "-12,99€")
     }
     
     @Test("Mise à jour du label")

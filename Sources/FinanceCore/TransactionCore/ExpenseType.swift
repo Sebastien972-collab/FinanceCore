@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ExpenseType: String, Hashable, CaseIterable {
+public enum ExpenseType: String, Hashable, CaseIterable, Sendable {
     case fixed = "Dépense fixe"
     case rent = "Loyer"
     case utilities = "Factures"

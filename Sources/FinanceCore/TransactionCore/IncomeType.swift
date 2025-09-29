@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum IncomeType: String, Hashable, CaseIterable {
+public enum IncomeType: String, Hashable, CaseIterable, Sendable {
     case salary = "Salaire"
     case bonus = "Bonus"
     case idependant = "Indépendant"
