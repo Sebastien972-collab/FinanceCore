@@ -13,13 +13,13 @@ public struct Scheduler {
     public var totalMonths: Int
     public var steps: [SchedulerStep] = []
     
-    init(starDate: Date, monthlyAmount: Decimal, totalMonths: Int) {
+    public init(starDate: Date, monthlyAmount: Decimal, totalMonths: Int) {
         self.starDate = starDate
         self.monthlyAmount = monthlyAmount
         self.totalMonths = totalMonths
         createScheduler()
     }
-    init(starDate: Date, monthlyAmount: Decimal, totalMonths: Int, steps: [SchedulerStep]) {
+    public init(starDate: Date, monthlyAmount: Decimal, totalMonths: Int, steps: [SchedulerStep]) {
         self.starDate = starDate
         self.monthlyAmount = monthlyAmount
         self.totalMonths = totalMonths
