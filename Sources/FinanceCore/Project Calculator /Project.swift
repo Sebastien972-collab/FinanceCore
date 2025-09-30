@@ -10,8 +10,8 @@ import Foundation
 public struct Project {
     public private(set) var name: String
     public private(set) var currentImage: String?
-    public private(set) var finalDate: Date
-    public private(set) var amount: Decimal
+    public private(set) var deadline: Date
+    public private(set) var goalAmount: Decimal
     public private(set) var transactions: [Transaction] = []
     public private(set) var currency: CurrencyAvailable = .eur
     public var amountSaved: Decimal {
@@ -33,21 +33,21 @@ public struct Project {
     public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal) {
         self.name = name
         self.currentImage = currentImage
-        self.finalDate = finalDate
-        self.amount = amount
+        self.deadline = finalDate
+        self.goalAmount = amount
     }
     public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction]) {
         self.name = name
         self.currentImage = currentImage
-        self.finalDate = finalDate
-        self.amount = amount
+        self.deadline = finalDate
+        self.goalAmount = amount
         self.transactions = transactions
     }
     public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction], currency: CurrencyAvailable) {
         self.name = name
         self.currentImage = currentImage
-        self.finalDate = finalDate
-        self.amount = amount
+        self.deadline = finalDate
+        self.goalAmount = amount
         self.transactions = transactions
         self.currency = currency
     }
@@ -70,8 +70,8 @@ public struct Project {
         self.name = name
     }
     public mutating func updateDate(_ date: Date) {
-        guard date != self.finalDate else { return }
-        self.finalDate = date
+        guard date != self.deadline else { return }
+        self.deadline = date
     }
     
     public func feasibilityCalculation(_ availableSavingsCapacity: Decimal) -> FeasibilityAnswer {
