@@ -7,7 +7,8 @@
 
 import Foundation
 
-public class Project {
+public class Project: Identifiable, Equatable {
+    public private(set) var id: UUID = .init()
     public private(set) var name: String
     public private(set) var currentImage: String?
     public private(set) var deadline: Date
@@ -55,6 +56,9 @@ public class Project {
         self.goalAmount = amount
         self.transactions = transactions
         self.currency = currency
+    }
+    public static func == (lhs: Project, rhs: Project) -> Bool {
+        lhs.name == rhs.name && lhs.deadline == rhs.deadline && lhs.goalAmount == rhs.goalAmount && lhs.transactions == rhs.transactions
     }
     public func addTransaction(_ amount: Decimal, date: Date? = nil) throws {
         guard amount != 0 else {  throw TransactionError.invalidAmount(amount) }
