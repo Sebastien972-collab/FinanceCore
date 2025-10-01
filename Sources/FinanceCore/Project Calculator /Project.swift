@@ -7,16 +7,20 @@
 
 import Foundation
 
-public struct Project {
+public class Project {
     public private(set) var name: String
     public private(set) var currentImage: String?
     public private(set) var deadline: Date
     public private(set) var goalAmount: Decimal
     public private(set) var transactions: [Transaction] = []
     public private(set) var currency: CurrencyAvailable = .eur
+    public private(set) var startedDate: Date = .now
+    public private(set) var minimumInvestment: Decimal = 0
+    //public private(set) var scheduler: Scheduler
     public var amountSaved: Decimal {
         transactions.reduce(Decimal(0)) { $0 + $1.amount }
     }
+    
     public var formattedAmount: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -35,6 +39,7 @@ public struct Project {
         self.currentImage = currentImage
         self.deadline = finalDate
         self.goalAmount = amount
+        //self.scheduler = Scheduler(starDate: .now, monthlyAmount: goalAmount - amountSaved, totalMonths: <#T##Int#>)
     }
     public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction]) {
         self.name = name
@@ -51,25 +56,23 @@ public struct Project {
         self.transactions = transactions
         self.currency = currency
     }
-    public mutating func addTransaction(_ amount: Decimal, date: Date? = nil) throws {
+    public func addTransaction(_ amount: Decimal, date: Date? = nil) throws {
         guard amount != 0 else {  throw TransactionError.invalidAmount(amount) }
         let newTransaction = Transaction(date: date ?? .now, amount: amount, category: .income(.ponctuel))
         transactions.append(newTransaction)
     }
-    
-    public mutating func addCashWithdrawal(_ amount: Decimal, date: Date? = nil) throws {
+    public func addCashWithdrawal(_ amount: Decimal, date: Date? = nil) throws {
         guard amount != 0 else { throw TransactionError.invalidAmount(amount) }
         guard amountSaved - amount >= 0 else { throw TransactionError.insufficientFunds}
         let newTransaction = Transaction(date: date ?? .now, amount: -amount, category: .expense(.other))
         transactions.append(newTransaction)
         
     }
-    
-    public mutating func updateName(_ name: String) {
+    public func updateName(_ name: String) {
         guard !name.isEmpty, name != self.name else { return }
         self.name = name
     }
-    public mutating func updateDate(_ date: Date) {
+    public func updateDate(_ date: Date) {
         guard date != self.deadline else { return }
         self.deadline = date
     }
@@ -77,4 +80,16 @@ public struct Project {
     public func feasibilityCalculation(_ availableSavingsCapacity: Decimal) -> FeasibilityAnswer {
         FeasibilityAnswer.positiveAnswer
     }
+    
+    func setupScheduler()  {
+        
+    }
+    private func feasibilityCalculation(_ amount: Decimal) -> Bool {
+        let numberOfMonths = DateCalculator.monthsBetween(startedDate, deadline)
+        self.minimumInvestment = goalAmount / Decimal(numberOfMonths)
+        return minimumInvestment <= amount
+        
+        
+    }
+    
 }

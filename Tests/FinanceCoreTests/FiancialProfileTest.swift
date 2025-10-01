@@ -42,4 +42,92 @@ struct FinancialProfileTests {
         #expect(FinancialProfile.classify(with: -50) == .survivor) // négatif = survivor
         #expect(FinancialProfile.classify(with: Decimal.greatestFiniteMagnitude) == .strategist)
     }
+    @Test("Initialisation avec revenus et dépenses")
+    func initWithRevenuesAndExpenses() async throws {
+        let manager = FinancialProfileManager(revenues: 2000, expenses: 1200)
+        
+        #expect(manager.revenues == 2000)
+        #expect(manager.expenses == 1200)
+        #expect(manager.availableSavingsCapacity == 800)
+    }
+    
+//    @Test("Initialisation avec transactions")
+//    func initWithTransactions() async throws {
+//        let transactions = [
+//            Transaction(amount: 200),
+//            Transaction(amount: 300),
+//            Transaction(amount: 500)
+//        ]
+//        
+//        let manager = FinancialProfileManager(revenues: 2000, transactions: transactions)
+//        
+//        #expect(manager.expenses == 1000)
+//        #expect(manager.availableSavingsCapacity == 1000)
+//        #expect(manager.transactions.count == 3)
+//    }
+    
+    @Test("Distribution pour profil Survivor")
+    func survivorDistribution() async throws {
+        let manager = FinancialProfileManager(revenues: 2000, expenses: 1000)
+        manager.calculateSavingDistribution()
+        
+        #expect(manager.amountSavedForSecurity > 0)
+        #expect(manager.savingProvide > 0)
+        #expect(manager.ras >= 0)
+    }
+    
+    @Test("Distribution pour profil Equilibrist")
+    func equilibristDistribution() async throws {
+        let manager = FinancialProfileManager(revenues: 2500, expenses: 1000)
+        manager.calculateSavingDistribution()
+        
+        #expect(manager.amountSavedForSecurity > 0)
+        #expect(manager.savingProvide > 0)
+        #expect(manager.longTermSavings > 0)
+        #expect(manager.ras >= 0)
+    }
+    
+    @Test("Distribution pour profil Builder")
+    func builderDistribution() async throws {
+        let manager = FinancialProfileManager(revenues: 3000, expenses: 1000)
+        manager.calculateSavingDistribution()
+        
+        #expect(manager.amountSavedForSecurity > 0)
+        #expect(manager.savingProvide > 0)
+        #expect(manager.longTermSavings > 0)
+        #expect(manager.ras >= 0)
+    }
+    
+    @Test("Distribution pour profil Strategist")
+    func strategistDistribution() async throws {
+        let manager = FinancialProfileManager(revenues: 5000, expenses: 2000)
+        manager.calculateSavingDistribution()
+        
+        #expect(manager.amountSavedForSecurity > 0)
+        #expect(manager.savingProvide > 0)
+        #expect(manager.longTermSavings > 0)
+        #expect(manager.ras >= 0)
+    }
+    
+    @Test("Cas limite : revenus < dépenses")
+    func negativeCapacity() async throws {
+        let manager = FinancialProfileManager(revenues: 1000, expenses: 1500)
+        manager.calculateSavingDistribution()
+        
+        #expect(manager.availableSavingsCapacity < 0)
+        #expect(manager.amountSavedForSecurity == 0)
+        #expect(manager.savingProvide == 0)
+        #expect(manager.ras == 0)
+    }
+    
+    @Test("Cas limite : revenus == dépenses")
+    func zeroCapacity() async throws {
+        let manager = FinancialProfileManager(revenues: 1000, expenses: 1000)
+        manager.calculateSavingDistribution()
+        
+        #expect(manager.availableSavingsCapacity == 0)
+        #expect(manager.amountSavedForSecurity == 0)
+        #expect(manager.savingProvide == 0)
+        #expect(manager.ras == 0)
+    }
 }

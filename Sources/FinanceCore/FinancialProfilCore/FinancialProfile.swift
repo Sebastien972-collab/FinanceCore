@@ -29,7 +29,7 @@ public enum FinancialProfile: String, CaseIterable, Codable, Hashable, Sendable 
             return nil
         }
     }
-    ///Classifies the profile from a monthly RAS.
+    ///Classifies the profile from a monthly ASC.
     public static func classify(with asc: Decimal) -> FinancialProfile {
         if asc <= survivor.ascUpperBound ?? 150 { return .survivor }
         if asc <= equilibrist.ascUpperBound ?? 250 { return .equilibrist }

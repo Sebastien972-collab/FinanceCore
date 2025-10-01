@@ -52,7 +52,8 @@ struct FinanceCoreCLI {
 
         // --- Calcul RAS & profil ---
         let manager = FinancialProfileManager(revenues: revenues, expenses: expenses)
-        let profile = manager.calculateWithExpense()
+        manager.calculateSavingDistribution()
+        let profile = manager.profile
 
         // Pour rester compatible avec ton libellé “mettre de côté” on ré‑utilise le 1/4 du RAS
         let availableForSaving = manager.projectSavingQuarter
