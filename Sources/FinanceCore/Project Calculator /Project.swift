@@ -70,7 +70,7 @@ public class Project: Identifiable, Equatable, Hashable {
             startDate: .now,
             monthlyAmount: goalAmount / Decimal(months),
             totalMonths: months
-            )
+        )
     }
     public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction], currency: CurrencyAvailable, scheduler: Scheduler) {
         self.name = name
@@ -119,12 +119,10 @@ public class Project: Identifiable, Equatable, Hashable {
     func setupScheduler()  {
         
     }
-    private func feasibilityCalculation(_ amount: Decimal) -> Bool {
+    public func feasibilityCalculation(_ amount: Decimal) -> Bool {
         let numberOfMonths = DateCalculator.monthsBetween(startedDate, deadline)
         self.minimumInvestment = goalAmount / Decimal(numberOfMonths)
         return minimumInvestment <= amount
-        
-        
     }
     
 }
