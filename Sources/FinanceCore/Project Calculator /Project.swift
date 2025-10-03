@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Project: Identifiable, Equatable {
+public class Project: Identifiable, Equatable, Hashable {
     public private(set) var id: UUID = .init()
     public private(set) var name: String
     public private(set) var currentImage: String?
@@ -17,11 +17,10 @@ public class Project: Identifiable, Equatable {
     public private(set) var currency: CurrencyAvailable = .eur
     public private(set) var startedDate: Date = .now
     public private(set) var minimumInvestment: Decimal = 0
-    //public private(set) var scheduler: Scheduler
+    public private(set) var scheduler: Scheduler
     public var amountSaved: Decimal {
         transactions.reduce(Decimal(0)) { $0 + $1.amount }
     }
-    
     public var formattedAmount: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -34,13 +33,17 @@ public class Project: Identifiable, Equatable {
         return "\(formatted)\(currency.symbol)"
     }
     
-    
     public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal) {
         self.name = name
         self.currentImage = currentImage
         self.deadline = finalDate
         self.goalAmount = amount
-        //self.scheduler = Scheduler(starDate: .now, monthlyAmount: goalAmount - amountSaved, totalMonths: <#T##Int#>)
+        let months = DateCalculator.monthsBetween(startedDate, deadline)
+        self.scheduler = Scheduler(
+            startDate: .now,
+            monthlyAmount: goalAmount / Decimal(months),
+            totalMonths: months
+        )
     }
     public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction]) {
         self.name = name
@@ -48,6 +51,12 @@ public class Project: Identifiable, Equatable {
         self.deadline = finalDate
         self.goalAmount = amount
         self.transactions = transactions
+        let months = DateCalculator.monthsBetween(startedDate, deadline)
+        self.scheduler = Scheduler(
+            startDate: .now,
+            monthlyAmount: goalAmount / Decimal(months),
+            totalMonths: months
+        )
     }
     public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction], currency: CurrencyAvailable) {
         self.name = name
@@ -56,9 +65,31 @@ public class Project: Identifiable, Equatable {
         self.goalAmount = amount
         self.transactions = transactions
         self.currency = currency
+        let months = DateCalculator.monthsBetween(startedDate, deadline)
+        self.scheduler = Scheduler(
+            startDate: .now,
+            monthlyAmount: goalAmount / Decimal(months),
+            totalMonths: months
+            )
+    }
+    public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction], currency: CurrencyAvailable, scheduler: Scheduler) {
+        self.name = name
+        self.currentImage = currentImage
+        self.deadline = finalDate
+        self.goalAmount = amount
+        self.transactions = transactions
+        self.currency = currency
+        let months = DateCalculator.monthsBetween(startedDate, deadline)
+        self.scheduler = Scheduler(
+            startDate: .now,
+            monthlyAmount: goalAmount / Decimal(months),
+            totalMonths: months)
     }
     public static func == (lhs: Project, rhs: Project) -> Bool {
         lhs.name == rhs.name && lhs.deadline == rhs.deadline && lhs.goalAmount == rhs.goalAmount && lhs.transactions == rhs.transactions
+    }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     public func addTransaction(_ amount: Decimal, date: Date? = nil) throws {
         guard amount != 0 else {  throw TransactionError.invalidAmount(amount) }
