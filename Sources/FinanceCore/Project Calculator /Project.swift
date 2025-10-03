@@ -112,9 +112,9 @@ public class Project: Identifiable, Equatable, Hashable {
         self.deadline = date
     }
     
-    public func feasibilityCalculation(_ availableSavingsCapacity: Decimal) -> FeasibilityAnswer {
-        FeasibilityAnswer.positiveAnswer
-    }
+//    public func feasibilityCalculation(_ availableSavingsCapacity: Decimal) -> FeasibilityAnswer {
+//        FeasibilityAnswer.positiveAnswer
+//    }
     
     func setupScheduler()  {
         
