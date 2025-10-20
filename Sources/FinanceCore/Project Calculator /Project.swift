@@ -18,6 +18,7 @@ public class Project: Identifiable, Equatable, Hashable {
     public private(set) var startedDate: Date = .now
     public private(set) var minimumInvestment: Decimal = 0
     public private(set) var scheduler: Scheduler
+    public private(set) var iconName: String? = nil
     public var amountSaved: Decimal {
         transactions.reduce(Decimal(0)) { $0 + $1.amount }
     }
@@ -112,11 +113,15 @@ public class Project: Identifiable, Equatable, Hashable {
         self.deadline = date
     }
     
-//    public func feasibilityCalculation(_ availableSavingsCapacity: Decimal) -> FeasibilityAnswer {
-//        FeasibilityAnswer.positiveAnswer
-//    }
+    //    public func feasibilityCalculation(_ availableSavingsCapacity: Decimal) -> FeasibilityAnswer {
+    //        FeasibilityAnswer.positiveAnswer
+    //    }
     
-    func setupScheduler()  {
+    func setupScheduler(_ asc: Decimal)  {
+        let monthlyAmount = goalAmount / Decimal(DateCalculator.monthsBetween(startedDate, deadline))
+        if monthlyAmount < asc {
+            
+        }
         
     }
     public func feasibilityCalculation(_ amount: Decimal) -> Bool {

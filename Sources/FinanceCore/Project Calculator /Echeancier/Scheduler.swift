@@ -39,5 +39,7 @@ public struct Scheduler {
             }
         }
     }
+    func update() {
+        
+    }
 }
-
