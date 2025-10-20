@@ -122,12 +122,16 @@ public class Project: Identifiable, Equatable, Hashable {
         if monthlyAmount < asc {
             
         }
-        
     }
     public func feasibilityCalculation(_ amount: Decimal) -> Bool {
         let numberOfMonths = DateCalculator.monthsBetween(startedDate, deadline)
         self.minimumInvestment = goalAmount / Decimal(numberOfMonths)
         return minimumInvestment <= amount
+    }
+    
+    public func updateIcon(_ iconName: String) {
+        guard iconName != self.iconName else { return }
+        self.iconName = iconName
     }
     
 }
