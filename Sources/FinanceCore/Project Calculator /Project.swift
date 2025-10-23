@@ -59,18 +59,10 @@ public class Project: Identifiable, Equatable, Hashable {
         
     }
     
-    public init(name: String,
-                creationDate: Date = .now,
-                finalDate: Date,
-                amount: Decimal,
-                transactions: [Transaction] = [],
-                currency: CurrencyAvailable,
-                scheduler: Scheduler) {
+    public init(name: String, iconNmae: String = "house.fill", creationDate: Date = .now,finalDate: Date,amount: Decimal = 0.0) {
         self.name = name
         self.deadline = finalDate
         self.goalAmount = amount
-        self.transactions = transactions
-        self.currency = currency
         self.creationDate = creationDate
     }
     
