@@ -18,7 +18,6 @@ public class Project: Identifiable, Equatable, Hashable {
     public var currency: CurrencyAvailable = .eur
     public var startedDate: Date = .now
     public var minimumInvestment: Decimal = 0
-    public var scheduler: Scheduler
     public var amountSaved: Decimal = 0.0
     
     // MARK: - Formatage
@@ -40,11 +39,6 @@ public class Project: Identifiable, Equatable, Hashable {
         self.deadline = finalDate
         self.goalAmount = amount
         let months = DateCalculator.monthsBetween(startedDate, deadline)
-        self.scheduler = Scheduler(
-            startDate: .now,
-            monthlyAmount: goalAmount / Decimal(months),
-            totalMonths: months
-        )
     }
     
     public init(name: String, finalDate: Date, amount: Decimal, transactions: [Transaction]) {
@@ -53,11 +47,6 @@ public class Project: Identifiable, Equatable, Hashable {
         self.goalAmount = amount
         self.transactions = transactions
         let months = DateCalculator.monthsBetween(startedDate, deadline)
-        self.scheduler = Scheduler(
-            startDate: .now,
-            monthlyAmount: goalAmount / Decimal(months),
-            totalMonths: months
-        )
     }
     
     public init(name: String, finalDate: Date, amount: Decimal, transactions: [Transaction], currency: CurrencyAvailable) {
@@ -67,11 +56,7 @@ public class Project: Identifiable, Equatable, Hashable {
         self.transactions = transactions
         self.currency = currency
         let months = DateCalculator.monthsBetween(startedDate, deadline)
-        self.scheduler = Scheduler(
-            startDate: .now,
-            monthlyAmount: goalAmount / Decimal(months),
-            totalMonths: months
-        )
+        
     }
     
     public init(name: String,
@@ -87,7 +72,13 @@ public class Project: Identifiable, Equatable, Hashable {
         self.transactions = transactions
         self.currency = currency
         self.creationDate = creationDate
-        self.scheduler = scheduler
+    }
+    
+    public init(name: String, iconName: String, finalDate: Date, amount: Decimal) {
+        self.name = name
+        self.deadline = finalDate
+        self.goalAmount = amount
+        
     }
     
     // MARK: - Égalité / hash
