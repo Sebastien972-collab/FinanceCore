@@ -8,9 +8,10 @@
 import Foundation
 
 public class Project: Identifiable, Equatable, Hashable {
-    public private(set) var id: UUID = .init()
+    public var id: UUID = .init()
     public private(set) var name: String
-    public private(set) var currentImage: String?
+    public private(set) var iconName: String? = nil
+    public private(set) var creationDate: Date = .now
     public private(set) var deadline: Date
     public private(set) var goalAmount: Decimal
     public private(set) var transactions: [Transaction] = []
@@ -18,10 +19,7 @@ public class Project: Identifiable, Equatable, Hashable {
     public private(set) var startedDate: Date = .now
     public private(set) var minimumInvestment: Decimal = 0
     public private(set) var scheduler: Scheduler
-    public private(set) var iconName: String? = nil
-    public var amountSaved: Decimal {
-        transactions.reduce(Decimal(0)) { $0 + $1.amount }
-    }
+    public var amountSaved: Decimal = 0.0
     public var formattedAmount: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -34,9 +32,8 @@ public class Project: Identifiable, Equatable, Hashable {
         return "\(formatted)\(currency.symbol)"
     }
     
-    public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal) {
+    public init(name: String, finalDate: Date, amount: Decimal) {
         self.name = name
-        self.currentImage = currentImage
         self.deadline = finalDate
         self.goalAmount = amount
         let months = DateCalculator.monthsBetween(startedDate, deadline)
@@ -46,9 +43,8 @@ public class Project: Identifiable, Equatable, Hashable {
             totalMonths: months
         )
     }
-    public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction]) {
+    public init(name: String, finalDate: Date, amount: Decimal, transactions: [Transaction]) {
         self.name = name
-        self.currentImage = currentImage
         self.deadline = finalDate
         self.goalAmount = amount
         self.transactions = transactions
@@ -59,9 +55,8 @@ public class Project: Identifiable, Equatable, Hashable {
             totalMonths: months
         )
     }
-    public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction], currency: CurrencyAvailable) {
+    public init(name: String, finalDate: Date, amount: Decimal, transactions: [Transaction], currency: CurrencyAvailable) {
         self.name = name
-        self.currentImage = currentImage
         self.deadline = finalDate
         self.goalAmount = amount
         self.transactions = transactions
@@ -73,9 +68,8 @@ public class Project: Identifiable, Equatable, Hashable {
             totalMonths: months
         )
     }
-    public init(name: String, currentImage: String? = nil, finalDate: Date, amount: Decimal, transactions: [Transaction], currency: CurrencyAvailable, scheduler: Scheduler) {
+    public init(name: String,creationDate: Date = .now, finalDate: Date, amount: Decimal, transactions: [Transaction] = [], currency: CurrencyAvailable, scheduler: Scheduler) {
         self.name = name
-        self.currentImage = currentImage
         self.deadline = finalDate
         self.goalAmount = amount
         self.transactions = transactions
@@ -85,6 +79,7 @@ public class Project: Identifiable, Equatable, Hashable {
             startDate: .now,
             monthlyAmount: goalAmount / Decimal(months),
             totalMonths: months)
+        self.creationDate = creationDate
     }
     public static func == (lhs: Project, rhs: Project) -> Bool {
         lhs.name == rhs.name && lhs.deadline == rhs.deadline && lhs.goalAmount == rhs.goalAmount && lhs.transactions == rhs.transactions

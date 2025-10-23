@@ -1,31 +1,54 @@
+//
+//  FinancialProfileManager.swift
+//  FinanceCore
+//
+//  Created by Sébastien Daguin on 22/08/2025.
+//
+
 import Foundation
 
+/// Gère les calculs financiers d’un profil utilisateur à partir de ses revenus et dépenses.
+/// Calcule la répartition de l’épargne, la capacité d’épargne et le profil financier associé.
 public final class FinancialProfileManager {
     public private(set) var revenues: Decimal = 0
     public private(set) var expenses: Decimal = 0
     public private(set) var transactions: [Transaction] = []
     private let calculator = FinanceCalculator()
-    // Indicateurs
-    ///Correspond à la capacité d'épargne disponible (ced)
-    public var availableSavingsCapacity: Decimal = 0    // revenus - dépenses
-    /// Le reste de ses revenues en enlevant son épargne de sécurité
-    public private(set) var safetyBase: Decimal = 0 // 3/4 de baseAfterExpenses
-    public private(set) var savingProvide: Decimal = 0 // Épargne de prévoyance
-    ///Montant de sa micro épargne du moos
+    
+    // MARK: - Indicateurs principaux
+    /// Capacité d’épargne disponible = revenus - dépenses
+    public var availableSavingsCapacity: Decimal = 0
+    
+    /// Base de sécurité (3/4 du reste après dépenses)
+    public private(set) var safetyBase: Decimal = 0
+    
+    /// Épargne de prévoyance
+    public private(set) var savingProvide: Decimal = 0
+    
+    /// Micro-épargne de sécurité mensuelle
     public private(set) var amountSavedForSecurity: Decimal = 0
-    public private(set) var longTermSavings:  Decimal = 0
-    public private(set) var bufferAmount: Decimal = 0            // 10% de safetyBase
-    ///Montant libre restant après ses épargnes
-    public private(set) var ras: Decimal = 0                     // safetyBase - bufferAmount
-    ///Montant de son épargne projet
-    public private(set) var projectSavingQuarter: Decimal = 0    // optionnel: 1/4 du RAS si tu veux proposer d’épargner
-
+    
+    /// Épargne long terme
+    public private(set) var longTermSavings: Decimal = 0
+    
+    /// Tampon de sécurité (10% de safetyBase)
+    public private(set) var bufferAmount: Decimal = 0
+    
+    /// Reste à servir (revenus après épargne et dépenses)
+    public private(set) var ras: Decimal = 0
+    
+    /// Épargne projet (1/4 du RAS si souhaité)
+    public private(set) var projectSavingQuarter: Decimal = 0
+    
+    // Épargne de précaution cible (3 × dépenses)
     public var precautionarySavingsAmount: Decimal { expenses * 3 }
-
+    
+    // Profil financier calculé à partir du RAS
     public var profile: FinancialProfile {
         FinancialProfile.classify(with: ras)
     }
-
+    
+    // MARK: - Initialisation
     public init(revenues: Decimal, expenses: Decimal) {
         self.revenues = revenues
         self.expenses = expenses
@@ -37,36 +60,48 @@ public final class FinancialProfileManager {
         self.transactions = transactions
         self.expenses = transactions.reduce(Decimal(0)) { $0 + $1.amount }
         self.availableSavingsCapacity = revenues - expenses
-        // tu pourrais dériver `expenses` depuis transactions si besoin
     }
-
-    /// Calcule le profil à partir d'un montant de dépenses (expenses) fourni.
+    
+    // MARK: - Calcul de la répartition selon le profil
     public func calculateSavingDistribution() {
         switch profile {
         case .survivor:
             distribution(asfsPercent: 55, savingsProvidePercent: 10)
         case .equilibrist:
-            distribution(asfsPercent: 50, savingsProvidePercent: 10, longTermeSavingPercent: 10)
+            distribution(asfsPercent: 50, savingsProvidePercent: 10, longTermSavingPercent: 10)
         case .builder:
-            distribution(asfsPercent: 45, savingsProvidePercent: 15, longTermeSavingPercent: 10)
+            distribution(asfsPercent: 45, savingsProvidePercent: 15, longTermSavingPercent: 10)
         case .strategist:
-            distribution(asfsPercent: 40, savingsProvidePercent: 10, longTermeSavingPercent: 15)
+            distribution(asfsPercent: 40, savingsProvidePercent: 10, longTermSavingPercent: 15)
         case .none:
-           break
+            break
         }
     }
     
-    private func distribution(asfsPercent: Decimal, savingsProvidePercent: Decimal, longTermeSavingPercent: Decimal? = nil) {
+    // MARK: - Méthode de distribution des pourcentages
+    private func distribution(asfsPercent: Decimal,
+                              savingsProvidePercent: Decimal,
+                              longTermSavingPercent: Decimal? = nil) {
         guard availableSavingsCapacity > 0 else { return }
-        amountSavedForSecurity = calculator.minusPercentage(of: availableSavingsCapacity, percent: asfsPercent)
+        
+        // 1. Épargne de sécurité
+        amountSavedForSecurity = calculator.percentage(of: availableSavingsCapacity, percent: asfsPercent)
         let remainingAfterSecurity = availableSavingsCapacity - amountSavedForSecurity
         guard remainingAfterSecurity > 0 else { return }
-        savingProvide = calculator.minusPercentage(of: remainingAfterSecurity, percent: savingsProvidePercent)
-        let remainingAfterSavingProvide = remainingAfterSecurity - savingProvide
-        guard let longTermeSavingPercent = longTermeSavingPercent, remainingAfterSavingProvide > 0 else { return ras = remainingAfterSavingProvide }
-        self.longTermSavings = calculator.minusPercentage(of: remainingAfterSavingProvide, percent: longTermeSavingPercent)
-        self.ras = remainingAfterSavingProvide - longTermeSavingPercent
         
+        // 2. Épargne de prévoyance
+        savingProvide = calculator.percentage(of: remainingAfterSecurity, percent: savingsProvidePercent)
+        let remainingAfterSavingProvide = remainingAfterSecurity - savingProvide
+        
+        // 3. Épargne long terme (si applicable)
+        if let longTermSavingPercent {
+            longTermSavings = calculator.percentage(of: remainingAfterSavingProvide, percent: longTermSavingPercent)
+            ras = remainingAfterSavingProvide - longTermSavings
+        } else {
+            ras = remainingAfterSavingProvide
+        }
+        
+        // 4. Épargne projet (optionnelle : 1/4 du RAS)
+        projectSavingQuarter = calculator.quarter(of: ras)
     }
-
 }
