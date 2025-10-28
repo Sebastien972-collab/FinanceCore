@@ -38,7 +38,6 @@ public class Project: Identifiable, Equatable, Hashable {
         self.name = name
         self.deadline = finalDate
         self.goalAmount = amount
-        let months = DateCalculator.monthsBetween(startedDate, deadline)
     }
     
     public init(name: String, finalDate: Date, amount: Decimal, transactions: [Transaction]) {
@@ -46,7 +45,6 @@ public class Project: Identifiable, Equatable, Hashable {
         self.deadline = finalDate
         self.goalAmount = amount
         self.transactions = transactions
-        let months = DateCalculator.monthsBetween(startedDate, deadline)
     }
     
     public init(name: String, finalDate: Date, amount: Decimal, transactions: [Transaction], currency: CurrencyAvailable) {
@@ -55,7 +53,6 @@ public class Project: Identifiable, Equatable, Hashable {
         self.goalAmount = amount
         self.transactions = transactions
         self.currency = currency
-        let months = DateCalculator.monthsBetween(startedDate, deadline)
         
     }
     
@@ -131,16 +128,16 @@ public class Project: Identifiable, Equatable, Hashable {
     }
     
     // MARK: - Conversion vers ProjectData
-    public func toProjectData(userId: UUID) -> ProjectData {
-        ProjectData(
-            id: self.id,
-            name: self.name,
-            iconName: self.iconName ?? "",
-            creationDate: self.creationDate,
-            endDate: self.deadline,
-            amountSaved: NSDecimalNumber(decimal: self.amountSaved).doubleValue,
-            amountTotal: NSDecimalNumber(decimal: self.goalAmount).doubleValue,
-            userID: userId
-        )
-    }
+//    public func toProjectData(userId: UUID) -> ProjectData {
+//        ProjectData(
+//            id: self.id,
+//            name: self.name,
+//            iconName: self.iconName ?? "",
+//            creationDate: self.creationDate,
+//            endDate: self.deadline,
+//            amountSaved: NSDecimalNumber(decimal: self.amountSaved).doubleValue,
+//            amountTotal: NSDecimalNumber(decimal: self.goalAmount).doubleValue,
+//            userID: userId
+//        )
+//    }
 }
