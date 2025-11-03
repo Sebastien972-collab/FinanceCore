@@ -38,7 +38,7 @@ public final class FinancialProfileManager {
     public private(set) var ras: Decimal = 0
     
     /// Épargne projet (1/4 du RAS si souhaité)
-    public private(set) var projectSavingQuarter: Decimal = 0
+    public private(set) var availableForSaving: Decimal = 0
     
     // Épargne de précaution cible (3 × dépenses)
     public var precautionarySavingsAmount: Decimal { expenses * 3 }
@@ -102,6 +102,6 @@ public final class FinancialProfileManager {
         }
         
         // 4. Épargne projet (optionnelle : 1/4 du RAS)
-        projectSavingQuarter = calculator.quarter(of: ras)
+        availableForSaving = calculator.quarter(of: ras)
     }
 }

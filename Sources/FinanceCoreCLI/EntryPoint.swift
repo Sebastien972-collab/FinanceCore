@@ -56,7 +56,7 @@ struct FinanceCoreCLI {
         let profile = manager.profile
 
         // Pour rester compatible avec ton libellé “mettre de côté” on ré‑utilise le 1/4 du RAS
-        let availableForSaving = manager.projectSavingQuarter
+        let availableForSaving = manager.availableForSaving
 
         // --- Affichage ---
         print("""
